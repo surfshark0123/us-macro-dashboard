@@ -30,6 +30,10 @@ period = st.sidebar.selectbox(
     }[x]
 )
 
+if st.sidebar.button("🔄 立即更新數據"):
+    st.cache_data.clear()
+    st.rerun()
+
 # 設定追蹤的指標與 yfinance 代碼
 tickers = {
     "S&P 500 指數": "^GSPC",
@@ -40,8 +44,7 @@ tickers = {
     "紐約原油期貨": "CL=F"
 }
 
-# 抓取資料函式（快取 1 小時避免重複請求）
-@st.cache_data(ttl=3600)
+@st.cache_data(ttl=300)  # 快取縮短為 5 分鐘
 def load_data(symbol, time_period):
     try:
         data = yf.Ticker(symbol).history(period=time_period)
